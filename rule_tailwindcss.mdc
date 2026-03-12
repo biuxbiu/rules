@@ -1,0 +1,180 @@
+---
+description: Tailwind CSS v4 快速配置规则 - 在项目中一键配置 Tailwind CSS v4
+alwaysApply: false
+enabled: true
+updatedAt: 2026-03-12T06:29:46.209Z
+provider: 
+---
+
+# Tailwind CSS v4 快速配置规则
+
+## 目的
+
+提供 Tailwind CSS v4 的标准配置方法，支持在任何 React + Vite 项目中快速集成 Tailwind CSS。
+
+## 触发方式
+
+当用户提到以下关键词时应用此规则：
+
+- `配置 tailwind`
+- `安装 tailwindcss`
+- `添加 tailwind`
+- `集成 tailwind`
+- `@tailwind`
+
+## 配置步骤
+
+### 1. 安装依赖包
+
+```bash
+npm install -D tailwindcss @tailwindcss/vite
+```
+
+**依赖说明：**
+- `tailwindcss`: Tailwind CSS v4 核心包
+- `@tailwindcss/vite`: Tailwind CSS v4 的 Vite 插件（零配置）
+
+### 2. 配置 Vite
+
+在 `vite.config.ts` 中添加 Tailwind 插件：
+
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss()  // 添加 Tailwind Vite 插件
+  ],
+  // ... 其他配置
+})
+```
+
+### 3. 创建或更新 CSS 入口文件
+
+在 `src/index.css` 中导入 Tailwind CSS：
+
+```css
+@import "tailwindcss";
+```
+
+**注意：**
+- 如果项目中有其他全局样式（如 Reset CSS），Tailwind 应该在最后导入，确保优先级更高
+- v4 使用 `@import` 指令，不再使用 v3 的 `@tailwind` 指令
+
+### 4. 在入口文件中引入样式
+
+在 `src/main.tsx` 中确保导入了 CSS 文件：
+
+```typescript
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './index.css'  // 确保导入 CSS 文件
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+```
+
+**样式加载顺序建议：**
+```typescript
+import './reset.css'   // Reset 样式先加载
+import './index.css'   // Tailwind CSS 后加载（优先级更高）
+```
+
+## Tailwind CSS v4 新特性
+
+### ✨ 与 v3 的主要区别
+
+| 特性 | v3 | v4 |
+|------|----|----|
+| 配置文件 | 需要 `tailwind.config.js` | ❌ 不需要配置文件 |
+| PostCSS 配置 | 需要 `postcss.config.js` | ❌ 不需要配置文件 |
+| CSS 导入方式 | `@tailwind base/components/utilities` | `@import "tailwindcss"` |
+| Vite 集成 | 通过 PostCSS 插件 | 专用 `@tailwindcss/vite` 插件 |
+
+### ✅ v4 的优势
+
+1. **零配置**：无需创建 `tailwind.config.js` 和 `postcss.config.js`
+2. **原生 CSS**：使用标准的 `@import` 语法
+3. **更快的构建**：专门优化的 Vite 插件
+4. **更简洁**：配置步骤减少 50%
+
+## 验证配置
+
+配置完成后，在任意组件中测试 Tailwind CSS 是否生效：
+
+```tsx
+function App() {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600">
+      <h1 className="text-4xl font-bold text-white">
+        Tailwind CSS v4 配置成功！
+      </h1>
+    </div>
+  )
+}
+```
+
+启动开发服务器：
+```bash
+npm run dev
+```
+
+如果看到样式生效，说明配置成功！✨
+
+## 常见问题
+
+### Q: 样式不生效怎么办？
+
+**检查清单：**
+1. ✅ 确认已安装 `tailwindcss` 和 `@tailwindcss/vite`
+2. ✅ `vite.config.ts` 中已添加 `tailwindcss()` 插件
+3. ✅ `src/index.css` 中有 `@import "tailwindcss"`
+4. ✅ `src/main.tsx` 中已导入 `./index.css`
+5. ✅ `tailwindcss 原子类被重置样式覆盖导致不生效`，需要到重置样式文件中使用 `@layer base{...重置样式}` 将重置样式包裹起来，降低重置样式的优先级
+6. ✅ 重启开发服务器
+
+### Q: 需要自定义配置怎么办？
+
+v4 支持通过 CSS 自定义变量进行配置，在 `src/index.css` 中添加：
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3b82f6;
+  --font-family-display: 'Inter', sans-serif;
+  /* 更多自定义配置 */
+}
+```
+
+### Q: 如何从 v3 迁移到 v4？
+
+1. 更新依赖包到 v4
+2. 删除 `tailwind.config.js` 和 `postcss.config.js`（可选）
+3. 更新 `vite.config.ts` 使用 `@tailwindcss/vite` 插件
+4. 修改 CSS 导入方式从 `@tailwind` 改为 `@import "tailwindcss"`
+5. 如有自定义配置，迁移到 `@theme` 指令中
+
+## 参考资源
+
+- [Tailwind CSS v4 官方文档](https://tailwindcss.com/docs)
+- [Tailwind CSS v4 Vite 插件](https://github.com/tailwindlabs/tailwindcss-vite)
+- [Tailwind CSS v4 升级指南](https://tailwindcss.com/docs/upgrade-guide)
+
+## 最佳实践
+
+1. **保持依赖版本一致**：`tailwindcss` 和 `@tailwindcss/vite` 使用相同版本
+2. **样式加载顺序**：Reset CSS → Tailwind CSS → 自定义样式
+3. **类名管理**：使用 `clsx` 或 `tailwind-merge` 管理动态类名
+4. **VS Code 插件**：安装 "Tailwind CSS IntelliSense" 获得智能提示
+
+---
+
+**配置完成后即可开始使用 Tailwind CSS v4 的所有功能！** 🎉

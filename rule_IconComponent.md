@@ -162,7 +162,7 @@ src/components/
 
 ```typescript
 // ❌ 错误（React 中必须使用驼峰命名）
-<svg stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 
 // ✅ 正确
 <svg strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
